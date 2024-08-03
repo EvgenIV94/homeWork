@@ -11,7 +11,7 @@ public class Family_tree {
 
     public Human getByName(String name) {
         for (Human human : people) {
-            if (human.getHuman().equals(name))
+            if (human.getName().equals(name))
                 return human;
         }return null;}
 

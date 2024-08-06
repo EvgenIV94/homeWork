@@ -56,7 +56,7 @@ public class Human implements Serializable {
                "Пол: " + gender + "\n" + 
                "Дата рождения: " + birthDate + "\n" + 
                (deathDate != null ? "Дата смерти: " + deathDate + "\n" : "") + 
-               "Возраст: " + getAgeAsOf(specificDate);
+               "Возраст: " + getAgeAsOf(specificDate) + "\n";
     }
     public String getFamilyInfo() {
         StringBuilder stringBuilder = new StringBuilder();

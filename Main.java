@@ -33,21 +33,32 @@ public class Main {
 
         try {
             fileHandler.writeFile("family_tree.dat", family_tree.getPeople());
-            System.out.println("Данные успешно записаны в файл.");
+            System.out.println("\nДанные успешно записаны в файл.");
         } catch (IOException e) {
             System.out.println("Ошибка при записи в файл: " + e.getMessage());
         }
 
         try {
             List<Human> peopleFromFile = fileHandler.readFile("family_tree.dat");
-            System.out.println("Данные успешно считаны из файла:");
+            System.out.println("Данные успешно считаны из файла:\n");
+            System.out.println("Список членов семьи:");
             for (Human human : peopleFromFile) {
                 System.out.println(human.getFamilyInfo());
             }
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Ошибка при чтении из файла: " + e.getMessage());
         }
-    }
 
-    
+        System.out.println("\nСортировка по имени:\n");
+        family_tree.sortByName();
+        for (Human human : family_tree) {
+            System.out.println(human);
+        }
+
+        System.out.println("\nСортировка по дате рождения:\n");
+        family_tree.sortByBirthDate();
+        for (Human human : family_tree) {
+            System.out.println(human);
+        }
+    }  
 }

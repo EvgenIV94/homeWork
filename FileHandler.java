@@ -11,6 +11,7 @@ public class FileHandler implements FileOperations {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<Human> readFile(String filename) throws IOException, ClassNotFoundException {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {

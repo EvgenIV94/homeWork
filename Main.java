@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        Family_tree family_tree = new Family_tree();
+        Family_tree<Human> family_tree = new Family_tree<>();
         Family_ties familyTies = new Family_ties(family_tree);
         FileOperations fileHandler = new FileHandler();
 

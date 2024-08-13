@@ -1,16 +1,18 @@
-package Seminars.Seminars_1.HomeWork1;
+package Seminars.Seminars_1.HomeWork1.Model;
 
 import java.util.List;
 
-public class Family_ties {
-    private Family_tree<Human> family_tree;
+public class Family_ties<E extends FamilyMember> {
+    private Family_tree<E> family_tree;
     private List<String> relations;
 
-    public Family_ties(Family_tree<Human> family_tree){this.family_tree = family_tree;}
+    public Family_ties(Family_tree<E> family_tree) {
+        this.family_tree = family_tree;
+    }
 
     public void addParentChildRelation(String parentName, String childName) {
-        Human parent = family_tree.getByName(parentName);
-        Human child = family_tree.getByName(childName);
+        E parent = family_tree.getByName(parentName);
+        E child = family_tree.getByName(childName);
 
         if (parent != null && child != null) {
             parent.addChild(child);
@@ -19,6 +21,7 @@ public class Family_ties {
             System.out.println("Отсутствует.");
         }
     }
+
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();

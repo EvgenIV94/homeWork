@@ -1,4 +1,4 @@
-package Seminars.Seminars_1.HomeWork1;
+package Seminars.Seminars_1.HomeWork1.Model;
 
 import java.io.*;
 import java.util.List;

@@ -1,19 +1,15 @@
 package Seminars.Seminars_1.HomeWork1.View;
-import Seminars.Seminars_1.HomeWork1.Model.FamilyMember;
-import Seminars.Seminars_1.HomeWork1.Model.Human.Gender;
 
+import Seminars.Seminars_1.HomeWork1.Model.FamilyMember;
+import Seminars.Seminars_1.HomeWork1.Model.Human;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleFamilyTreeView implements FamilyTreeView {
-    private Scanner scanner;
+    private Scanner scanner = new Scanner(System.in);
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-
-    public ConsoleFamilyTreeView() {
-        this.scanner = new Scanner(System.in);
-    }
 
     @Override
     public void showMenu() {
@@ -28,9 +24,7 @@ public class ConsoleFamilyTreeView implements FamilyTreeView {
     }
 
     @Override
-    public int getUserChoice() {
-        return Integer.parseInt(scanner.nextLine());
-    }
+    public int getUserChoice() {return Integer.parseInt(scanner.nextLine());}
 
     @Override
     public String getInput(String prompt) {
@@ -39,15 +33,10 @@ public class ConsoleFamilyTreeView implements FamilyTreeView {
     }
 
     @Override
-    public void showMessage(String message) {
-        System.out.println(message);
-    }
-
-    @Override
-    public Gender getGender() {
+    public Human.Gender getGender() {
         System.out.print("Введите пол (M/F): ");
         String genderInput = scanner.nextLine().trim().toUpperCase();
-        return genderInput.equals("M") ? Gender.Male : Gender.Female;
+        return genderInput.equals("M") ? Human.Gender.MALE : Human.Gender.FEMALE;
     }
 
     @Override
@@ -58,15 +47,21 @@ public class ConsoleFamilyTreeView implements FamilyTreeView {
     }
 
     @Override
+    public void showMessage(String message) {System.out.println(message);}
+
+    @Override
     public void showFamilyTree(List<FamilyMember> members) {
         System.out.println("\nСемейное древо:");
         for (FamilyMember member : members) {
-            System.out.println(member);
+            System.out.println(member.getName() + " (" + member.getBirthDate() + ")");
         }
     }
 
     @Override
     public void showFamilyRelations(FamilyMember member) {
-        System.out.println(member.getFamilyInfo());
+        System.out.println("Родители: ");
+        member.getParents().forEach(parent -> System.out.println(parent.getName()));
+        System.out.println("Дети: ");
+        member.getChildren().forEach(child -> System.out.println(child.getName()));
     }
 }

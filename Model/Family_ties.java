@@ -3,12 +3,10 @@ package Seminars.Seminars_1.HomeWork1.Model;
 import java.util.List;
 
 public class Family_ties<E extends FamilyMember> {
-    private Family_tree<E> family_tree;
+    private FamilyTree<E> family_tree;
     private List<String> relations;
 
-    public Family_ties(Family_tree<E> family_tree) {
-        this.family_tree = family_tree;
-    }
+    public Family_ties(FamilyTree<E> family_tree) {this.family_tree = family_tree;}
 
     public void addParentChildRelation(String parentName, String childName) {
         E parent = family_tree.getByName(parentName);

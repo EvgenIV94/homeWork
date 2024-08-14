@@ -1,20 +1,19 @@
 package Seminars.Seminars_1.HomeWork1.Presenter;
 
 import Seminars.Seminars_1.HomeWork1.Model.FamilyMember;
-import Seminars.Seminars_1.HomeWork1.Model.Family_tree;
+import Seminars.Seminars_1.HomeWork1.Model.FamilyTree;
 import Seminars.Seminars_1.HomeWork1.View.FamilyTreeView;
 import java.time.LocalDate;
 import java.util.List;
 import Seminars.Seminars_1.HomeWork1.Model.Human;
-import Seminars.Seminars_1.HomeWork1.Model.Human.Gender;
 
 public class FamilyTreePresenter {
     private FamilyTreeView view;
-    private Family_tree<FamilyMember> familyTree;
+    private FamilyTree<FamilyMember> familyTree;
 
-    public FamilyTreePresenter(FamilyTreeView view) {
+    public FamilyTreePresenter(FamilyTreeView view, FamilyTree<FamilyMember> familyTree) {
         this.view = view;
-        this.familyTree = new Family_tree<>();
+        this.familyTree = familyTree;
     }
 
     public void start() {
@@ -50,7 +49,7 @@ public class FamilyTreePresenter {
 
     private void addHuman() {
         String name = view.getInput("Введите имя: ");
-        Gender gender = view.getGender();
+        Human.Gender gender = view.getGender();
         LocalDate birthDate = view.getBirthDate();
         
         FamilyMember member = new Human(name, gender, birthDate);
@@ -62,16 +61,19 @@ public class FamilyTreePresenter {
     private void addParent() {
         String parentName = view.getInput("Введите имя родителя: ");
         String childName = view.getInput("Введите имя ребенка: ");
-        familyTree.addParentChildRelation(parentName, childName);
+        FamilyMember parent = familyTree.getByName(parentName);
+        FamilyMember child = familyTree.getByName(childName);
+        if (parent != null && child != null) {
+            familyTree.addParentChildRelation(parent, child);
+            view.showMessage("Родитель добавлен.");
+        } else {
+            view.showMessage("Родитель или ребенок не найдены.");
+        }
     }
 
     private void showFamilyTree() {
         List<FamilyMember> members = familyTree.getMembers();
-        if (members.isEmpty()) {
-            view.showMessage("Семейное древо пусто.");
-        } else {
-            view.showFamilyTree(members);
-        }
+        view.showFamilyTree(members);
     }
 
     private void showFamilyRelations() {
@@ -85,13 +87,5 @@ public class FamilyTreePresenter {
     }
 
     private void saveFamilyTree() {
-        String filename = view.getInput("Введите имя файла для сохранения: ");
-        try {
-            familyTree.saveToFile(filename);
-            view.showMessage("Семейное древо сохранено.");
-        } catch (Exception e) {
-            view.showMessage("Ошибка при сохранении: " + e.getMessage());
-        }
     }
 }
-

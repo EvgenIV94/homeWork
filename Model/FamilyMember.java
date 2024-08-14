@@ -1,17 +1,12 @@
 package Seminars.Seminars_1.HomeWork1.Model;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface FamilyMember extends Serializable {
-    enum Gender { Male, Female }
-
-    String getName();
+public interface FamilyMember extends NamedEntity {
     LocalDate getBirthDate();
-    void addChild(FamilyMember child);
-    void addParent(FamilyMember parent);
     List<FamilyMember> getChildren();
     List<FamilyMember> getParents();
-    String getFamilyInfo();
+    <E extends FamilyMember> void addChild(E child);
+    <E extends FamilyMember> void addParent(E parent);
 }

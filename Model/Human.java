@@ -5,45 +5,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Human implements FamilyMember {
-    private static final long serialVersionUID = 1L;
-
-    public enum Gender { Male, Female }
+    public enum Gender { MALE, FEMALE }
 
     private String name;
     private Gender gender;
     private LocalDate birthDate;
-    private LocalDate deathDate;
-    private transient List<FamilyMember> parents;
-    private transient List<FamilyMember> children;
+    private List<FamilyMember> children = new ArrayList<>();
+    private List<FamilyMember> parents = new ArrayList<>();
 
     public Human(String name, Gender gender, LocalDate birthDate) {
-        this(name, gender, birthDate, null);
-    }
-
-    public Human(String name, Gender gender, LocalDate birthDate, LocalDate deathDate) {
         this.name = name;
         this.gender = gender;
         this.birthDate = birthDate;
-        this.deathDate = deathDate;
-        this.parents = new ArrayList<>();
-        this.children = new ArrayList<>();
     }
 
     @Override
-    public String getName() { return name; }
-    @Override
-    public LocalDate getBirthDate() { return birthDate; }
-    @Override
-    public void addChild(FamilyMember child) { this.children.add(child); }
-    @Override
-    public void addParent(FamilyMember parent) { this.parents.add(parent); }
-    @Override
-    public List<FamilyMember> getChildren() { return children; }
-    public List<FamilyMember> getParents() { return parents; }
+    public String getName() {return name;}
 
     @Override
-    public String getFamilyInfo() {
-        throw new UnsupportedOperationException("Unimplemented method 'getFamilyInfo'");
-    }
+    public LocalDate getBirthDate() {return birthDate;}
 
+    @Override
+    public List<FamilyMember> getChildren() {return children;}
+
+    @Override
+    public List<FamilyMember> getParents() {return parents;}
+
+    public void addChild(FamilyMember child) {children.add(child);}
+
+    public void addParent(FamilyMember parent) {parents.add(parent);}
 }
+

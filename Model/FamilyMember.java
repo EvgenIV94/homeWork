@@ -1,12 +1,14 @@
-package Seminars.Seminars_1.HomeWork1.Model;
+package HomeWork.FamilyTree.Model;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public interface FamilyMember extends NamedEntity {
+    enum Gender { MALE, FEMALE }
     LocalDate getBirthDate();
     List<FamilyMember> getChildren();
     List<FamilyMember> getParents();
-    <E extends FamilyMember> void addChild(E child);
-    <E extends FamilyMember> void addParent(E parent);
+    void addChild(FamilyMember child);
+    void addParent(FamilyMember parent);
+    String getFamilyInfo();
 }

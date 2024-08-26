@@ -1,91 +1,97 @@
-package Seminars.Seminars_1.HomeWork1.Presenter;
+package HomeWork.FamilyTree.Presenter;
 
-import Seminars.Seminars_1.HomeWork1.Model.FamilyMember;
-import Seminars.Seminars_1.HomeWork1.Model.FamilyTree;
-import Seminars.Seminars_1.HomeWork1.View.FamilyTreeView;
+import HomeWork.FamilyTree.Model.FamilyMember;
+import HomeWork.FamilyTree.Model.FamilyTreeService;
+import HomeWork.FamilyTree.Model.FamilyMemberFactory;
+import HomeWork.FamilyTree.View.FamilyTreeView;
+
 import java.time.LocalDate;
 import java.util.List;
-import Seminars.Seminars_1.HomeWork1.Model.Human;
 
-public class FamilyTreePresenter {
+public class FamilyTreePresenter<T extends FamilyMember> {
     private FamilyTreeView view;
-    private FamilyTree<FamilyMember> familyTree;
+    private FamilyTreeService<T> familyTreeService;
+    private FamilyMemberFactory<T> factory;
 
-    public FamilyTreePresenter(FamilyTreeView view, FamilyTree<FamilyMember> familyTree) {
+    public FamilyTreePresenter(FamilyTreeView view, FamilyTreeService<T> familyTreeService, FamilyMemberFactory<T> factory) {
         this.view = view;
-        this.familyTree = familyTree;
+        this.familyTreeService = familyTreeService;
+        this.factory = factory;
     }
 
     public void start() {
-        boolean running = true;
-        while (running) {
+        while (true) {
             view.showMenu();
+            for (int i = 1; i <= 6; i++) {
+                view.showOption(i, getOptionDescription(i));
+            }
             int choice = view.getUserChoice();
             switch (choice) {
-                case 1:
-                    addHuman();
-                    break;
-                case 2:
-                    showFamilyTree();
-                    break;
-                case 3:
-                    addParent();
-                    break;
-                case 4:
-                    showFamilyRelations();
-                    break;
-                case 5:
-                    saveFamilyTree();
-                    break;
-                case 6:
-                    view.showMessage("Выход из приложения...");
-                    running = false;
-                    break;
-                default:
-                    view.showMessage("Неверный выбор. Попробуйте еще раз.");
+                case 1: addHuman(); break;
+                case 2: showFamilyTree(); break;
+                case 3: sortByName(); break;
+                case 4: sortByBirthDate(); break;
+                case 5: saveToFile(view.getInput("Введите имя файла: ")); break;
+                case 6: return;
+                default: view.showMessage("Неверный выбор. Попробуйте снова.");
             }
         }
     }
 
-    private void addHuman() {
+    private String getOptionDescription(int option) {
+        switch (option) {
+            case 1: return "Добавить человека";
+            case 2: return "Показать всё семейное древо";
+            case 3: return "Сортировать по имени";
+            case 4: return "Сортировать по дате рождения";
+            case 5: return "Сохранить в файл";
+            case 6: return "Выход";
+            default: return "Неизвестная опция";
+        }
+    }
+
+    public void addHuman() {
         String name = view.getInput("Введите имя: ");
-        Human.Gender gender = view.getGender();
+        FamilyMember.Gender gender = view.getGender();
         LocalDate birthDate = view.getBirthDate();
         
-        FamilyMember member = new Human(name, gender, birthDate);
-        familyTree.addMember(member);
+        T human = factory.create(name, gender, birthDate);
+        familyTreeService.addMember(human);
         
         view.showMessage("Человек добавлен.");
     }
 
-    private void addParent() {
-        String parentName = view.getInput("Введите имя родителя: ");
-        String childName = view.getInput("Введите имя ребенка: ");
-        FamilyMember parent = familyTree.getByName(parentName);
-        FamilyMember child = familyTree.getByName(childName);
-        if (parent != null && child != null) {
-            familyTree.addParentChildRelation(parent, child);
-            view.showMessage("Родитель добавлен.");
-        } else {
-            view.showMessage("Родитель или ребенок не найдены.");
-        }
+    public void showFamilyTree() {
+        List<T> members = familyTreeService.getMembers();
+        view.showFamilyTree((List<FamilyMember>) (List<?>) members);
     }
 
-    private void showFamilyTree() {
-        List<FamilyMember> members = familyTree.getMembers();
-        view.showFamilyTree(members);
+    public void sortByName() {
+        familyTreeService.sortByName();
+        view.showMessage("Отсортировано по имени.");
     }
 
-    private void showFamilyRelations() {
-        String name = view.getInput("Введите имя для показа родственных связей: ");
-        FamilyMember member = familyTree.getByName(name);
+    public void sortByBirthDate() {
+        familyTreeService.sortByBirthDate();
+        view.showMessage("Отсортировано по дате рождения.");
+    }
+
+    public void saveToFile(String filename) {
+        familyTreeService.saveFamilyTree(filename);
+        view.showMessage("Фамильное древо сохранено в файл: " + filename);
+    }
+
+    public void removeHuman() {
+        String name = view.getInput("Введите имя человека для удаления: ");
+        T member = (T) familyTreeService.getMembers().stream()
+                                    .filter(m -> m.getName().equals(name))
+                                    .findFirst()
+                                    .orElse(null);
         if (member != null) {
-            view.showFamilyRelations(member);
+            familyTreeService.removeMember(member);
+            view.showMessage("Человек удален.");
         } else {
-            view.showMessage("Член семьи не найден.");
+            view.showMessage("Человек не найден.");
         }
-    }
-
-    private void saveFamilyTree() {
     }
 }

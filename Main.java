@@ -1,15 +1,17 @@
-package Seminars.Seminars_1.HomeWork1;
+package HomeWork.FamilyTree;
 
-import Seminars.Seminars_1.HomeWork1.View.*;
-import Seminars.Seminars_1.HomeWork1.Model.FamilyMember;
-import Seminars.Seminars_1.HomeWork1.Model.FamilyTree;
-import Seminars.Seminars_1.HomeWork1.Presenter.*;
+import HomeWork.FamilyTree.Model.*;
+import HomeWork.FamilyTree.Presenter.*;
+import HomeWork.FamilyTree.View.*;
 
 public class Main {
     public static void main(String[] args) {
-         FamilyTreeView view = new ConsoleFamilyTreeView();
-        FamilyTree<FamilyMember> familyTree = new FamilyTree<>();
-        FamilyTreePresenter presenter = new FamilyTreePresenter(view, familyTree);
+        FamilyTreeView view = new ConsoleFamilyTreeView();
+        FamilyTree<Human> familyTree = new FamilyTree<>();
+        FileHandler<Human> fileHandler = new FileHandler<>();
+        FamilyTreeService<Human> service = new FamilyTreeService<>(familyTree, fileHandler);
+        FamilyMemberFactory<Human> factory = new HumanFactory();
+        FamilyTreePresenter<Human> presenter = new FamilyTreePresenter<>(view, service, factory);
         presenter.start();
     }
 }

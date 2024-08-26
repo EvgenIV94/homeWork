@@ -1,12 +1,10 @@
-package Seminars.Seminars_1.HomeWork1.Model;
+package HomeWork.FamilyTree.Model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Human implements FamilyMember {
-    public enum Gender { MALE, FEMALE }
-
     private String name;
     private Gender gender;
     private LocalDate birthDate;
@@ -20,19 +18,25 @@ public class Human implements FamilyMember {
     }
 
     @Override
-    public String getName() {return name;}
+    public String getName() { return name; }
 
     @Override
-    public LocalDate getBirthDate() {return birthDate;}
+    public LocalDate getBirthDate() { return birthDate; }
 
     @Override
-    public List<FamilyMember> getChildren() {return children;}
+    public List<FamilyMember> getChildren() { return children; }
 
     @Override
-    public List<FamilyMember> getParents() {return parents;}
+    public List<FamilyMember> getParents() { return parents; }
 
-    public void addChild(FamilyMember child) {children.add(child);}
+    @Override
+    public String getFamilyInfo() {
+        return "Имя: " + name + ", Пол: " + gender + ", Дата рождения: " + birthDate;
+    }
 
-    public void addParent(FamilyMember parent) {parents.add(parent);}
+    @Override
+    public void addChild(FamilyMember child) { children.add(child); }
+
+    @Override
+    public void addParent(FamilyMember parent) { parents.add(parent); }
 }
-

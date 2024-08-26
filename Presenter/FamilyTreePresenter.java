@@ -7,46 +7,47 @@ import HomeWork.FamilyTree.View.FamilyTreeView;
 
 import java.time.LocalDate;
 import java.util.List;
-
 public class FamilyTreePresenter<T extends FamilyMember> {
     private FamilyTreeView view;
     private FamilyTreeService<T> familyTreeService;
     private FamilyMemberFactory<T> factory;
+    private List<MenuOption> menuOptions;
 
     public FamilyTreePresenter(FamilyTreeView view, FamilyTreeService<T> familyTreeService, FamilyMemberFactory<T> factory) {
         this.view = view;
         this.familyTreeService = familyTreeService;
         this.factory = factory;
+
+        menuOptions = List.of(
+            new AddHumanOption(),
+            new ShowFamilyTreeOption(),
+            new SortByNameOption(),
+            new SortByBirthDateOption(),
+            new SaveToFileOption(),
+            new AddChildOption(),
+            new ShowFamilyRelationsOption(),
+            new ExitOption()
+    );
+
+    }
+
+    public FamilyTreeView getView() {
+        return view;
     }
 
     public void start() {
         while (true) {
             view.showMenu();
-            for (int i = 1; i <= 6; i++) {
-                view.showOption(i, getOptionDescription(i));
+            for (int i = 0; i < menuOptions.size(); i++) {
+                MenuOption option = menuOptions.get(i);
+                view.showOption(i + 1, option.getDescription());
             }
             int choice = view.getUserChoice();
-            switch (choice) {
-                case 1: addHuman(); break;
-                case 2: showFamilyTree(); break;
-                case 3: sortByName(); break;
-                case 4: sortByBirthDate(); break;
-                case 5: saveToFile(view.getInput("Введите имя файла: ")); break;
-                case 6: return;
-                default: view.showMessage("Неверный выбор. Попробуйте снова.");
+            if (choice > 0 && choice <= menuOptions.size()) {
+                menuOptions.get(choice - 1).execute(this);
+            } else {
+                view.showMessage("Неверный выбор. Попробуйте снова.");
             }
-        }
-    }
-
-    private String getOptionDescription(int option) {
-        switch (option) {
-            case 1: return "Добавить человека";
-            case 2: return "Показать всё семейное древо";
-            case 3: return "Сортировать по имени";
-            case 4: return "Сортировать по дате рождения";
-            case 5: return "Сохранить в файл";
-            case 6: return "Выход";
-            default: return "Неизвестная опция";
         }
     }
 
@@ -63,7 +64,7 @@ public class FamilyTreePresenter<T extends FamilyMember> {
 
     public void showFamilyTree() {
         List<T> members = familyTreeService.getMembers();
-        view.showFamilyTree((List<FamilyMember>) (List<?>) members);
+        view.showFamilyTree(members);
     }
 
     public void sortByName() {
@@ -94,4 +95,41 @@ public class FamilyTreePresenter<T extends FamilyMember> {
             view.showMessage("Человек не найден.");
         }
     }
+    public void addChild() {
+        String parentName = view.getInput("Введите имя родителя: ");
+        String childName = view.getInput("Введите имя ребенка: ");
+        T parent = (T) familyTreeService.getMembers().stream()
+            .filter(m -> m.getName().equals(parentName))
+            .findFirst()
+            .orElse(null);
+        T child = (T) familyTreeService.getMembers().stream()
+            .filter(m -> m.getName().equals(childName))
+            .findFirst()
+            .orElse(null);
+    
+        if (parent != null && child != null) {
+            parent.addChild(child);
+            child.addParent(parent);
+            view.showMessage("Связь добавлена.");
+        } else {
+            view.showMessage("Родитель или ребенок не найден.");
+        }
+    }
+    
+    public void showFamilyRelations() {
+        String name = view.getInput("Введите имя для просмотра связей: ");
+        T member = (T) familyTreeService.getMembers().stream()
+            .filter(m -> m.getName().equals(name))
+            .findFirst()
+            .orElse(null);
+    
+        if (member != null) {
+            view.showFamilyRelations(member);
+        } else {
+            view.showMessage("Человек не найден.");
+        }
+    }
+    
+
+    public void exit() {System.exit(0);}
 }

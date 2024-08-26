@@ -2,7 +2,6 @@
 package HomeWork.FamilyTree.View;
 
 import HomeWork.FamilyTree.Model.FamilyMember;
-import HomeWork.FamilyTree.Model.FamilyMember.Gender;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -12,13 +11,13 @@ import java.util.Scanner;
 public class ConsoleFamilyTreeView implements FamilyTreeView {
     private Scanner scanner;
 
-    public ConsoleFamilyTreeView() {this.scanner = new Scanner(System.in);}
+    public ConsoleFamilyTreeView() { this.scanner = new Scanner(System.in); }
 
     @Override
-    public void showMenu() {System.out.println("\nМеню:");}
+    public void showMenu() { System.out.println("\nМеню:"); }
 
     @Override
-    public void showOption(int number, String description) {System.out.println(number + ". " + description);}
+    public void showOption(int number, String description) { System.out.println(number + ". " + description); }
 
     @Override
     public int getUserChoice() {
@@ -33,13 +32,13 @@ public class ConsoleFamilyTreeView implements FamilyTreeView {
     }
 
     @Override
-    public void showMessage(String message) {System.out.println(message);}
+    public void showMessage(String message) { System.out.println(message); }
 
     @Override
-    public Gender getGender() {
+    public FamilyMember.Gender getGender() {
         System.out.print("Введите пол (M/F): ");
         String genderInput = scanner.nextLine().trim().toUpperCase();
-        return genderInput.equals("M") ? Gender.MALE : Gender.FEMALE;
+        return genderInput.equals("M") ? FamilyMember.Gender.MALE : FamilyMember.Gender.FEMALE;
     }
 
     @Override
@@ -50,7 +49,7 @@ public class ConsoleFamilyTreeView implements FamilyTreeView {
     }
 
     @Override
-    public void showFamilyTree(List<FamilyMember> members) {
+    public void showFamilyTree(List<? extends FamilyMember> members) {
         System.out.println("\nСемейное древо:");
         for (FamilyMember member : members) {
             System.out.println(member.getFamilyInfo());
@@ -59,5 +58,9 @@ public class ConsoleFamilyTreeView implements FamilyTreeView {
 
     @Override
     public void showFamilyRelations(FamilyMember member) {
+        System.out.println("Родственные связи для " + member.getName() + ":");
+        System.out.println("Родители: " + member.getParents());
+        System.out.println("Дети: " + member.getChildren());
     }
 }
+

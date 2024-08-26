@@ -12,6 +12,6 @@ public interface FamilyTreeView {
     FamilyMember.Gender getGender();
     LocalDate getBirthDate();
     void showMessage(String message);
-    void showFamilyTree(List<FamilyMember> members);
+    void showFamilyTree(List<? extends FamilyMember> members);
     void showFamilyRelations(FamilyMember member);
 }
